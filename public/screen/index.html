@@ -16,15 +16,25 @@
             <p>ESCANEIE<br />PARA JOGAR</p>
           </div>
           <div id="playing" class="display-state hidden">
-            <p class="display-label">CARREGANDO</p>
-            <strong id="seconds" class="display-timer">15</strong>
-            <div class="energy-track"><div id="charge" class="energy-charge"></div></div>
-            <div class="battery-icon"><strong id="percentage" class="display-percent">0%</strong></div>
+            <div class="game-heading">
+              <p class="display-label">CARREGANDO</p>
+              <strong id="seconds" class="display-timer">15</strong>
+              <span class="timer-unit">segundos</span>
+            </div>
+            <div class="battery-icon">
+              <div id="battery-fill" class="battery-fill"></div>
+              <strong id="percentage" class="display-percent">0%</strong>
+            </div>
             <p id="player-name" class="display-player">—</p>
           </div>
           <div id="result" class="display-state hidden">
-            <p class="display-label">ENERGIA FINAL</p>
-            <div class="battery-icon result-battery"><strong id="result-percent" class="result-percent">0%</strong></div>
+            <p class="display-label">PARABÉNS!</p>
+            <p id="result-player" class="result-player">—</p>
+            <p class="result-label">ENERGIA FINAL</p>
+            <div class="battery-icon result-battery">
+              <div id="result-battery-fill" class="battery-fill"></div>
+              <strong id="result-percent" class="result-percent">0%</strong>
+            </div>
             <p id="result-prize" class="result-prize"></p>
             <p class="result-instruction">RETIRE SEU BRINDE<br />COM NOSSA EQUIPE</p>
           </div>

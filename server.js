@@ -142,7 +142,7 @@ function endGame() {
   const prize = awardPrize(result.percent);
   result.prize = prize?.nome || 'Sem brinde disponível';
   insertParticipant.run(game.player.name, game.player.phoneDigits, game.player.email, result.score, result.percent, game.player.consumption, prize?.id || null, result.prize, new Date().toISOString());
-  io.emit('game:ended', { ...result, player: { name: game.player.name } });
+  const player = { name: game.player.name };
   game.active = false;
   game.player = null;
   game.score = 0;
@@ -150,6 +150,7 @@ function endGame() {
   game.endsAt = null;
   game.timer = null;
   io.emit('game:state', snapshot());
+  io.emit('game:ended', { ...result, player });
 }
 
 io.on('connection', (socket) => {
