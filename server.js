@@ -49,6 +49,7 @@ const insertParticipant = db.prepare(
 );
 const eligiblePrizes = db.prepare('SELECT id, nome, probabilidade FROM brindes WHERE ativo = 1 AND quantidade > 0 AND percentual_minimo <= ?');
 const decrementPrize = db.prepare('UPDATE brindes SET quantidade = quantidade - 1 WHERE id = ? AND quantidade > 0');
+const phoneExists = db.prepare('SELECT 1 FROM participantes WHERE telefone = ? LIMIT 1');
 
 const game = { active: false, player: null, score: 0, startedAt: null, endsAt: null, timer: null };
 
@@ -60,11 +61,24 @@ app.get('/mobile', (_req, res) => res.sendFile(path.join(__dirname, 'public/mobi
 app.get('/telao', (_req, res) => res.redirect('/screen'));
 app.get('/celular', (_req, res) => res.redirect('/mobile'));
 
+app.get('/api/check-phone', (req, res) => {
+  const phone = String(req.query.phone || '').replace(/\D/g, '');
+  if (phone.length < 8) return res.json({ played: false });
+  const row = phoneExists.get(phone);
+  res.json({ played: !!row });
+});
+
 app.get('/admin/exportar-csv', (_req, res) => {
   const rows = db.prepare('SELECT nome, telefone, email, consumo_energia, pontuacao, percentual, premio, criado_em FROM participantes ORDER BY id DESC').all();
   const quote = (value) => `"${String(value ?? '').replaceAll('"', '""')}"`;
   const csv = ['Nome,Telefone,E-mail,Consumo de energia (%),Pontuação,Bateria (%),Brinde,Data', ...rows.map((row) => [row.nome, row.telefone, row.email, row.consumo_energia, row.pontuacao, row.percentual, row.premio, row.criado_em].map(quote).join(','))].join('\n');
   res.set({ 'Content-Type': 'text/csv; charset=utf-8', 'Content-Disposition': 'attachment; filename="relatorio-bateria.csv"' }).send(`\uFEFF${csv}`);
+});
+
+app.get('/admin/download-db', (_req, res) => {
+  // Faz checkpoint do WAL para garantir que todos os dados estejam no arquivo principal
+  try { db.exec('PRAGMA wal_checkpoint(TRUNCATE)'); } catch { /* ignora se WAL não estiver ativo */ }
+  res.download(path.join(__dirname, 'data.db'), 'data.db');
 });
 
 app.get('/admin/brindes', (_req, res) => res.sendFile(path.join(__dirname, 'public/admin/index.html')));
@@ -127,7 +141,7 @@ function endGame() {
   const result = { score: game.score, percent: Math.min(100, game.score) };
   const prize = awardPrize(result.percent);
   result.prize = prize?.nome || 'Sem brinde disponível';
-  insertParticipant.run(game.player.name, game.player.phone, game.player.email, result.score, result.percent, game.player.consumption, prize?.id || null, result.prize, new Date().toISOString());
+  insertParticipant.run(game.player.name, game.player.phoneDigits, game.player.email, result.score, result.percent, game.player.consumption, prize?.id || null, result.prize, new Date().toISOString());
   io.emit('game:ended', { ...result, player: { name: game.player.name } });
   game.active = false;
   game.player = null;
@@ -149,9 +163,10 @@ io.on('connection', (socket) => {
     const phoneDigits = phone.replace(/\D/g, '');
     if (!name || phoneDigits.length < 8 || !Number.isFinite(consumption) || consumption < 0 || consumption > 100000 || (email && !/^\S+@\S+\.\S+$/.test(email))) return socket.emit('game:error', 'Preencha nome, telefone e consumo válidos. O e-mail é opcional.');
     if (game.active) return socket.emit('game:busy');
+    if (phoneExists.get(phoneDigits)) return socket.emit('game:already-played');
 
     game.active = true;
-    game.player = { name, phone, email, consumption, socketId: socket.id };
+    game.player = { name, phone, phoneDigits, email, consumption, socketId: socket.id };
     game.score = 0;
     game.startedAt = Date.now();
     game.endsAt = game.startedAt + 15_000;
@@ -166,7 +181,11 @@ io.on('connection', (socket) => {
   });
 });
 
-const mobileUrl = `http://${getLocalAddress()}:${port}/mobile`;
+const isDev = process.env.NODE_ENV !== 'production';
+const mobileUrl = isDev
+  ? `http://${getLocalAddress()}:${port}/mobile`
+  : `${(process.env.APP_URL || process.env.RENDER_EXTERNAL_URL || `http://localhost:${port}`).replace(/\/$/, '')}/mobile`;
+
 app.get('/api/qrcode', async (_req, res, next) => {
   try {
     res.type('png').send(await QRCode.toBuffer(mobileUrl, { width: 440, margin: 2, color: { dark: '#092d2f', light: '#ffffff' } }));
@@ -174,6 +193,7 @@ app.get('/api/qrcode', async (_req, res, next) => {
 });
 
 server.listen(port, '0.0.0.0', () => {
-  console.log(`Telão: http://localhost:${port}/screen`);
-  console.log(`Celular: ${mobileUrl}`);
+  console.log(`Ambiente : ${isDev ? 'desenvolvimento' : 'produção'}`);
+  console.log(`Telão    : http://localhost:${port}/screen`);
+  console.log(`Celular  : ${mobileUrl}`);
 });

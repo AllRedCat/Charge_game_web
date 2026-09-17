@@ -25,16 +25,16 @@ A aplicação consiste em um jogo interativo no estilo *clicker* para eventos e 
 Bateria/
 ├── package.json              # Configuração de dependências ("type": "module")
 ├── server.js                 # Servidor HTTP, lógica do Socket.io e SQLite nativo
-├── data.db          # Banco de dados gerado automaticamente na primeira execução
+├── data.db                   # Banco de dados gerado automaticamente na primeira execução
 └── public/
     ├── screen/
     │   ├── index.html        # Dashboard gráfico exibido no telão do estande
     │   ├── app.js            # Lógica de atualização em tempo real do telão
-    │   └── style.css          # Estilos do telão
+    │   └── style.css         # Estilos do telão
     └── mobile/
         ├── index.html        # Interface mobile para cadastro e botão de toque
         ├── app.js            # Lógica mobile (localStorage, toques e comunicação Socket.io)
-        └── style.css          # Estilos mobile
+        └── style.css         # Estilos mobile
 ```
 ---
 ## 4. Pré-requisitos e Instruções de Desenvolvimento
