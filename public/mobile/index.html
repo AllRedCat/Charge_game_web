@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no"/>
+    <meta name="theme-color" content="#082b2d"/>
+    <title>Desafio da Energia</title>
+    <link rel="stylesheet" href="/mobile/style.css"/>
+</head>
+<body>
+<main class="mobile-shell">
+    <header>
+        <div class="logo-slot" aria-label="Espaço reservado para logo">SUA LOGO</div>
+    </header>
+    <section id="form-view" class="view active">
+        <div class="icon">ϟ</div>
+        <p class="eyebrow">VAMOS COMEÇAR</p>
+        <h1>Carregue a<br/><em>bateria.</em></h1>
+        <p class="intro">Cadastre-se e mostre toda a energia que você tem.</p>
+        <form id="player-form"><label>SEU NOME<input id="name" name="name" autocomplete="name" maxlength="80"
+                                                     placeholder="Como podemos te chamar?" required/></label><label>SEU
+            TELEFONE<input id="phone" name="phone" autocomplete="tel" inputmode="tel" maxlength="30"
+                           placeholder="(00) 00000-0000" required/></label><label>CONSUMO DE ENERGIA (kWh)<input
+                id="consumption" name="consumption" type="number" min="0" max="100000" step="0.01" inputmode="decimal"
+                placeholder="Ex.: 250" required/></label><label>SEU E-MAIL <small>(OPCIONAL)</small><input id="email"
+                                                                                                           name="email"
+                                                                                                           autocomplete="email"
+                                                                                                           type="email"
+                                                                                                           maxlength="160"
+                                                                                                           placeholder="voce@email.com"/></label>
+            <button type="submit">COMEÇAR <b>→</b></button>
+        </form>
+        <!--        <p class="privacy">Seus dados são usados somente para este evento.</p>-->
+    </section>
+    <section id="ready-view" class="view">
+        <div class="icon">ϟ</div>
+        <p class="eyebrow">TUDO PRONTO, <span id="ready-name"></span></p>
+        <h1>Prepare<br/>seus <em>dedos.</em></h1>
+        <p class="intro">Ao começar, você terá <strong>15 segundos</strong> para tocar o botão o mais rápido possível.
+        </p>
+        <button id="start-button">COMEÇAR AGORA <b>→</b></button>
+        <p class="small-note">O telão vai acompanhar cada toque seu.</p>
+    </section>
+    <section id="wait-view" class="view center">
+        <div class="loader"></div>
+        <p class="eyebrow">AGUARDE UM MOMENTO</p>
+        <h2>Já temos alguém<br/><em>no desafio.</em></h2>
+        <p>Assim que a rodada terminar, você poderá jogar.</p></section>
+    <section id="game-view" class="view game">
+        <div class="game-top"><span>TOQUE SEM PARAR</span><strong id="time-left">15</strong></div>
+        <button id="tap-button" aria-label="Toque aqui">ϟ</button>
+        <p>TOQUE AQUI O MAIS RÁPIDO QUE PUDER</p></section>
+    <section id="result-view" class="view center"><p class="eyebrow">MANDOU BEM!</p>
+        <h2>Você carregou</h2>
+        <div class="mobile-battery"><em id="mobile-percent">0%</em></div>
+        <div class="prize-card"><span>SEU BRINDE</span><strong id="mobile-prize"></strong></div>
+        <p>Procure nossa equipe para retirar seu presente.</p>
+        <button id="play-again">JOGAR NOVAMENTE</button>
+    </section>
+    <p id="message" class="message" role="alert"></p>
+</main>
+<script src="/socket.io/socket.io.js"></script>
+<script type="module" src="/mobile/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Desafio da Energia</title>
+    <link rel="stylesheet" href="/screen/style.css" />
+  </head>
+  <body>
+    <main class="charger-stage" aria-label="Desafio da Energia">
+      <div class="charger-canvas">
+        <img class="charger-art" src="/assets/ev-charger.png" alt="Carregador de veículo elétrico" />
+        <section class="device-display" aria-live="polite">
+          <div id="idle" class="display-state">
+            <img class="qr-code" src="/api/qrcode" alt="QR Code para participar" />
+            <p>ESCANEIE<br />PARA JOGAR</p>
+          </div>
+          <div id="playing" class="display-state hidden">
+            <p class="display-label">CARREGANDO</p>
+            <strong id="seconds" class="display-timer">15</strong>
+            <div class="energy-track"><div id="charge" class="energy-charge"></div></div>
+            <div class="battery-icon"><strong id="percentage" class="display-percent">0%</strong></div>
+            <p id="player-name" class="display-player">—</p>
+          </div>
+          <div id="result" class="display-state hidden">
+            <p class="display-label">ENERGIA FINAL</p>
+            <div class="battery-icon result-battery"><strong id="result-percent" class="result-percent">0%</strong></div>
+            <p id="result-prize" class="result-prize"></p>
+            <p class="result-instruction">RETIRE SEU BRINDE<br />COM NOSSA EQUIPE</p>
+          </div>
+        </section>
+      </div>
+    </main>
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="module" src="/screen/app.js"></script>
+  </body>
+</html>

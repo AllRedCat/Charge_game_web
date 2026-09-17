@@ -1,6 +1,9 @@
-DS_Store
-.idea/
-.vs/
-.vscode/
-.env
 node_modules/
+data.db
+.DS_Store
+.idea/
+.vs
+.vscode
+.env
+identifier.sqlite
+.idea

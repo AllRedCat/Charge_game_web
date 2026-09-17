@@ -2,7 +2,7 @@
 ## 1. Descrição do Projeto
 A aplicação consiste em um jogo interativo no estilo *clicker* para eventos e estandes institucionais. O objetivo é permitir que um visitante utilize seu próprio smartphone (acessando via QR Code, sem necessidade de baixar aplicativos) para encher um tanque virtual exibido em um telão em tempo real.
 ### Dinâmica e Regras de Negócio
-- **Acesso e Cadastro:** O participante escaneia o QR Code e preenche um cadastro simples (Nome e E-mail). As informações ficam salvas no `localStorage` do celular para evitar novos cadastros em acessos futuros.
+- **Acesso e Cadastro:** O participante escaneia o QR Code e preenche Nome e Telefone (obrigatórios), com E-mail opcional. As informações ficam salvas no `localStorage` do celular para evitar novos cadastros em acessos futuros.
 - **Controle de Acesso (Trava Única):** O sistema permite apenas um jogador por vez. Se outro participante tentar acessar enquanto a partida estiver ativa, ele receberá um aviso de espera no celular.
 - **Sincronização em Tempo Real:** O jogo no telão é iniciado apenas quando o participante clica no botão "Começar" em seu celular. Durante a partida (15 segundos), cada toque na tela incrementa a pontuação e atualiza a animação no telão instantaneamente.
 - **Persistência de Dados e Relatórios:** Ao término da partida, o resultado é enviado ao banco de dados local. O sistema possui uma rota administrativa para exportação dos dados dos participantes em formato `.csv`.
@@ -29,10 +29,12 @@ Bateria/
 └── public/
     ├── screen/
     │   ├── index.html        # Dashboard gráfico exibido no telão do estande
-    │   └── app.js            # Lógica de atualização em tempo real do telão
+    │   ├── app.js            # Lógica de atualização em tempo real do telão
+    │   └── style.css          # Estilos do telão
     └── mobile/
         ├── index.html        # Interface mobile para cadastro e botão de toque
-        └── app.js            # Lógica mobile (localStorage, toques e comunicação Socket.io)
+        ├── app.js            # Lógica mobile (localStorage, toques e comunicação Socket.io)
+        └── style.css          # Estilos mobile
 ```
 ---
 ## 4. Pré-requisitos e Instruções de Desenvolvimento
@@ -46,19 +48,26 @@ Bateria/
 {
   "name": "jogo-estande-bateria",
   "version": "1.0.0",
-    "socket.io": "^4.7.5"
+  "type": "module",
+  "scripts": { "start": "node server.js" },
+  "dependencies": {
+    "express": "^5.2.1",
+    "qrcode": "^1.5.4",
+    "socket.io": "^4.8.3"
   }
 }
 
 ```
-#### 2. `server.js`
-```javascript
-import express from 'express';
-import http from 'http';
-import { Server } from 'socket.io';
-}
-server.listen(3000, '0.0.0.0', () => console.log('Servidor rodando em http://localhost:3000'));
-```
+#### Regras de premiação implementadas
+
+| Carga atingida | Brinde |
+| --- | --- |
+| 0–29% | Brinde de Participação |
+| 30–59% | Brinde Clássico |
+| 60–89% | Brinde Especial |
+| 90–100% | Brinde Premium |
+
+O relatório CSV armazena nome, telefone, e-mail, pontuação e consumo de energia final (%). O QR Code é gerado pelo próprio servidor e todas as telas, dados e comunicação funcionam localmente — sem depender de internet externa.
 ### Passo a Passo para Execução
 1. **Instalação das dependências:**
    ```bash

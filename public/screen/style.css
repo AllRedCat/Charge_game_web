@@ -1,0 +1,23 @@
+:root { color-scheme: dark; }
+* { box-sizing: border-box; }
+html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: #071422; font-family: Arial, sans-serif; }
+.charger-stage { width: 100vw; height: 100vh; overflow: hidden; position: relative; }
+.charger-canvas { position: absolute; left: 50%; top: 50%; width: max(100vw, 177.68vh); aspect-ratio: 1672 / 941; transform: translate(-50%, -50%); }
+.charger-art { display: block; width: 100%; height: 100%; user-select: none; pointer-events: none; }
+.device-display { position: absolute; left: 40.07%; top: 13.28%; width: 18.84%; height: 34.11%; overflow: hidden; background: #020405; border-radius: .85vw; box-shadow: inset 0 0 1.6vw #001523; color: #e9fbff; }
+.display-state { position: absolute; inset: 0; display: grid; place-items: center; align-content: center; text-align: center; padding: 8%; background: radial-gradient(circle at 50% 15%, #062a3b, #020405 70%); }
+.display-state.hidden { display: none; }
+.qr-code { width: 73%; max-height: 68%; object-fit: contain; padding: 2%; background: white; border-radius: .3vw; }
+.display-state p { margin: 5% 0 0; font-weight: 700; font-size: clamp(7px, .68vw, 18px); line-height: 1.23; letter-spacing: .08em; }
+.display-label { color: #26d9ff; font-size: clamp(6px, .57vw, 15px) !important; letter-spacing: .16em !important; }
+.display-timer { color: #ecfeff; font-size: clamp(20px, 3.1vw, 84px); line-height: .9; text-shadow: 0 0 1vw #00c9ff; }
+.energy-track { width: 76%; height: 8%; overflow: hidden; border: 1px solid #1b7493; border-radius: 99px; background: #06131b; box-shadow: inset 0 0 .5vw #000; }
+.energy-charge { width: 0; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #00a7ff, #34efff); box-shadow: 0 0 1vw #00d5ff; transition: width .12s ease-out; }
+.battery-icon { position: relative; width: 45%; height: 20%; min-height: 19px; display: grid; place-items: center; border: clamp(1px, .18vw, 4px) solid #31e9ff; border-radius: .4vw; box-shadow: 0 0 1vw #00cfff88; }
+.battery-icon::after { content: ''; position: absolute; right: -9%; top: 29%; width: 7%; height: 42%; border-radius: 0 .2vw .2vw 0; background: #31e9ff; }
+.result-battery { width: 55%; height: 24%; }
+.display-percent { color: #31e9ff; font-size: clamp(13px, 1.35vw, 36px); line-height: 1; }
+.display-player { color: #a7c4cf; font-size: clamp(6px, .54vw, 14px) !important; overflow: hidden; max-width: 100%; text-overflow: ellipsis; white-space: nowrap; }
+.result-percent { color: #36eeff; font-size: clamp(24px, 3.3vw, 88px); line-height: 1; text-shadow: 0 0 1.2vw #00cfff; }
+.result-prize { color: white; font-size: clamp(8px, .82vw, 22px) !important; }
+.result-instruction { color: #82a9b5; font-size: clamp(5px, .5vw, 13px) !important; }

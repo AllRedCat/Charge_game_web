@@ -1,0 +1,10 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>Administração de brindes</title><link rel="stylesheet" href="/admin/style.css" /></head>
+  <body>
+    <main><header><div><p class="eyebrow">ADMINISTRAÇÃO</p><h1>Brindes</h1></div><a href="/admin/exportar-csv">Exportar participantes</a></header>
+      <section class="card"><h2>Adicionar brinde</h2><p>O peso de probabilidade é relativo aos demais brindes elegíveis. Ex.: pesos 1 e 3 representam 25% e 75% de chance.</p><form action="/admin/brindes" method="post"><label>Nome<input name="nome" maxlength="100" required /></label><label>Quantidade<input name="quantidade" type="number" min="0" step="1" required /></label><label>Carga mínima (%)<input name="percentual_minimo" type="number" min="0" max="100" step="1" required /></label><label>Peso de probabilidade<input name="probabilidade" type="number" min="0.01" step="0.01" value="1" required /></label><button>Adicionar brinde</button></form></section>
+      <section class="card"><h2>Estoque disponível</h2><div id="notice" class="notice"></div><div id="prize-list" class="prize-list">Carregando…</div></section>
+    </main><script type="module" src="/admin/app.js"></script>
+  </body>
+</html>
