@@ -27,13 +27,16 @@ function batteryColor(percent) {
   }
 }
 
-function setProgress(percent) {
+function setProgress(score) {
+  const percent = Math.min(100, score);
   const color = batteryColor(percent);
   const fill = document.querySelector('#battery-fill');
   fill.style.height = `${percent}%`;
   fill.style.backgroundColor = color;
-  // texto
-  document.querySelector('#percentage').textContent = `${percent}%`;
+  document.querySelector('#percentage').textContent = `${score}%`;
+  const overage = document.querySelector('#overage');
+  overage.classList.toggle('hidden', score <= 100);
+  overage.textContent = `+${score - 100} ACIMA DE 100`;
 }
 
 function setResultBattery(percent) {
@@ -75,12 +78,12 @@ socket.on('game:state', (state) => {
     clearTimeout(resultTimeout);
     show('playing');
     document.querySelector('#player-name').textContent = state.player.name;
-    setProgress(state.percent);
+    setProgress(state.score);
     beginCountdown(state.endsAt);
   }
 });
 socket.on('game:started', (state) => { show('playing'); document.querySelector('#player-name').textContent = state.player.name; setProgress(0); beginCountdown(state.endsAt); });
-socket.on('game:progress', ({ percent }) => setProgress(percent));
+socket.on('game:progress', ({ score }) => setProgress(score));
 socket.on('ranking:update', setRanking);
 socket.on('game:ended', ({ percent, prize, player }) => {
   clearInterval(countdown);
