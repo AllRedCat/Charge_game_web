@@ -50,6 +50,7 @@ const insertParticipant = db.prepare(
 const eligiblePrizes = db.prepare('SELECT id, nome, probabilidade FROM brindes WHERE ativo = 1 AND quantidade > 0 AND percentual_minimo <= ?');
 const decrementPrize = db.prepare('UPDATE brindes SET quantidade = quantidade - 1 WHERE id = ? AND quantidade > 0');
 const phoneExists = db.prepare('SELECT 1 FROM participantes WHERE telefone = ? LIMIT 1');
+const topRanking = db.prepare('SELECT nome, pontuacao FROM participantes ORDER BY pontuacao DESC, id DESC LIMIT 5');
 
 const game = { active: false, player: null, score: 0, startedAt: null, endsAt: null, timer: null };
 
@@ -135,6 +136,10 @@ function snapshot() {
   return { active: game.active, player: game.player ? { name: game.player.name } : null, score: game.score, percent: Math.min(100, game.score), endsAt: game.endsAt };
 }
 
+function ranking() {
+  return topRanking.all().map((player, index) => ({ position: index + 1, name: player.nome, score: player.pontuacao }));
+}
+
 function endGame() {
   if (!game.active) return;
   clearTimeout(game.timer);
@@ -151,10 +156,12 @@ function endGame() {
   game.timer = null;
   io.emit('game:state', snapshot());
   io.emit('game:ended', { ...result, player });
+  io.emit('ranking:update', ranking());
 }
 
 io.on('connection', (socket) => {
   socket.emit('game:state', snapshot());
+  socket.emit('ranking:update', ranking());
 
   socket.on('game:start', (player) => {
     const name = String(player?.name || '').trim().slice(0, 80);

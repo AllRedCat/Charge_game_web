@@ -10,6 +10,12 @@
     <main class="charger-stage" aria-label="Desafio da Energia">
       <div class="charger-canvas">
         <img class="charger-art" src="/assets/ev-charger.png" alt="Carregador de veículo elétrico" />
+        <aside class="ranking-panel" aria-label="Ranking dos cinco melhores jogadores">
+          <p class="ranking-title">TOP 5</p>
+          <ol id="ranking-list" class="ranking-list">
+            <li class="ranking-empty">AGUARDANDO JOGADORES</li>
+          </ol>
+        </aside>
         <section class="device-display" aria-live="polite">
           <div id="idle" class="display-state">
             <img class="qr-code" src="/api/qrcode" alt="QR Code para participar" />

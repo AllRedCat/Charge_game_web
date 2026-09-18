@@ -44,6 +44,25 @@ function setResultBattery(percent) {
   document.querySelector('#result-percent').textContent = `${percent}%`;
 }
 
+function setRanking(players) {
+  const list = document.querySelector('#ranking-list');
+  list.replaceChildren();
+  if (!players.length) {
+    const empty = document.createElement('li');
+    empty.className = 'ranking-empty';
+    empty.textContent = 'AGUARDANDO JOGADORES';
+    list.append(empty);
+    return;
+  }
+  players.forEach(({ position, name, score }) => {
+    const item = document.createElement('li');
+    item.className = 'ranking-item';
+    item.innerHTML = `<span class="ranking-position">${position}</span><span class="ranking-name"></span><strong>${score}</strong>`;
+    item.querySelector('.ranking-name').textContent = name;
+    list.append(item);
+  });
+}
+
 function beginCountdown(endsAt) {
   clearInterval(countdown);
   const tick = () => { const seconds = Math.max(0, Math.ceil((endsAt - Date.now()) / 1000)); document.querySelector('#seconds').textContent = seconds; };
@@ -62,6 +81,7 @@ socket.on('game:state', (state) => {
 });
 socket.on('game:started', (state) => { show('playing'); document.querySelector('#player-name').textContent = state.player.name; setProgress(0); beginCountdown(state.endsAt); });
 socket.on('game:progress', ({ percent }) => setProgress(percent));
+socket.on('ranking:update', setRanking);
 socket.on('game:ended', ({ percent, prize, player }) => {
   clearInterval(countdown);
   setResultBattery(percent);

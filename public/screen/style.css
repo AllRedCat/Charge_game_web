@@ -39,6 +39,80 @@ html, body {
     pointer-events: none;
 }
 
+.ranking-panel {
+    position: absolute;
+    /* top: 12%;
+    right: 3.5%; */
+    top: 50%;
+    left: 15%;
+    width: 17%;
+    padding: 1.2% 1.1%;
+    border: 1px solid #ffffffb8;
+    border-radius: .65vw;
+    background: #082b3dcc;
+    box-shadow: 0 .5vw 1.5vw #00152345;
+    color: #fff;
+}
+
+.ranking-title {
+    margin: 0 0 8%;
+    /* color: #31e9ff; */
+    color: #c0f4fa;
+    /* font-size: clamp(8px, .7vw, 18px); */
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: .16em;
+    text-align: center;
+}
+
+.ranking-list {
+    display: grid;
+    gap: .42em;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ranking-item {
+    display: grid;
+    grid-template-columns: 1.4em minmax(0, 1fr) auto;
+    align-items: center;
+    gap: .35em;
+    min-height: 1.7em;
+    border-bottom: 1px solid #ffffff26;
+    /* font-size: clamp(7px, .55vw, 14px); */
+    font-size: 1.2rem;
+}
+
+.ranking-item:last-child {
+    border-bottom: 0;
+}
+
+.ranking-position {
+    color: #8cefff;
+    font-weight: 800;
+    text-align: center;
+}
+
+.ranking-name {
+    overflow: hidden;
+    color: #f4fbff;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ranking-item strong {
+    color: #fff;
+    font-size: 1.05em;
+}
+
+.ranking-empty {
+    color: #b5ced8;
+    font-size: clamp(6px, .45vw, 12px);
+    line-height: 1.35;
+    text-align: center;
+}
+
 .device-display {
     position: absolute;
     left: 40.07%;
