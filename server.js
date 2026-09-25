@@ -54,13 +54,15 @@ const topRanking = db.prepare('SELECT nome, pontuacao FROM participantes ORDER B
 
 const game = { active: false, player: null, score: 0, startedAt: null, endsAt: null, timer: null };
 
-app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: false }));
-app.get('/', (_req, res) => res.redirect('/screen'));
+app.get('/', (_req, res) => res.redirect('/painel'));
 app.get('/screen', (_req, res) => res.sendFile(path.join(__dirname, 'public/screen/index.html')));
+app.get('/panel', (_req, res) => res.sendFile(path.join(__dirname, 'public/panel/index.html')));
 app.get('/mobile', (_req, res) => res.sendFile(path.join(__dirname, 'public/mobile/index.html')));
 app.get('/telao', (_req, res) => res.redirect('/screen'));
+app.get('/painel', (_req, res) => res.redirect('/panel'));
 app.get('/celular', (_req, res) => res.redirect('/mobile'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/api/check-phone', (req, res) => {
   const phone = String(req.query.phone || '').replace(/\D/g, '');
@@ -203,5 +205,6 @@ app.get('/api/qrcode', async (_req, res, next) => {
 server.listen(port, '0.0.0.0', () => {
   console.log(`Ambiente : ${isDev ? 'desenvolvimento' : 'produção'}`);
   console.log(`Telão    : http://localhost:${port}/screen`);
+  console.log(`Painel   : http://localhost:${port}/panel`);
   console.log(`Celular  : ${mobileUrl}`);
 });

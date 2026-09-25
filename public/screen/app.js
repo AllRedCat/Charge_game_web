@@ -27,13 +27,16 @@ function batteryColor(percent) {
   }
 }
 
-function setProgress(percent) {
+function setProgress(score) {
+  const percent = Math.min(100, score);
   const color = batteryColor(percent);
   const fill = document.querySelector('#battery-fill');
   fill.style.height = `${percent}%`;
   fill.style.backgroundColor = color;
-  // texto
-  document.querySelector('#percentage').textContent = `${percent}%`;
+  document.querySelector('#percentage').textContent = `${score}%`;
+  const overage = document.querySelector('#overage');
+  overage.classList.toggle('hidden', score <= 100);
+  overage.textContent = `+${score - 100} ACIMA DE 100`;
 }
 
 function setResultBattery(percent) {
@@ -44,17 +47,18 @@ function setResultBattery(percent) {
   document.querySelector('#result-percent').textContent = `${percent}%`;
 }
 
-function setRanking(players) {
+function setRanking(players = []) {
   const list = document.querySelector('#ranking-list');
   list.replaceChildren();
-  if (!players.length) {
+  const safePlayers = players || [];
+  if (!safePlayers.length) {
     const empty = document.createElement('li');
     empty.className = 'ranking-empty';
     empty.textContent = 'AGUARDANDO JOGADORES';
     list.append(empty);
     return;
   }
-  players.forEach(({ position, name, score }) => {
+  safePlayers.forEach(({ position, name, score }) => {
     const item = document.createElement('li');
     item.className = 'ranking-item';
     item.innerHTML = `<span class="ranking-position">${position}</span><span class="ranking-name"></span><strong>${score}</strong>`;
@@ -65,7 +69,12 @@ function setRanking(players) {
 
 function beginCountdown(endsAt) {
   clearInterval(countdown);
-  const tick = () => { const seconds = Math.max(0, Math.ceil((endsAt - Date.now()) / 1000)); document.querySelector('#seconds').textContent = seconds; };
+  const tick = () => {
+    const remaining = endsAt - Date.now();
+    const seconds = Math.max(0, Math.ceil(remaining / 1000));
+    document.querySelector('#seconds').textContent = seconds;
+    if (remaining <= 0) clearInterval(countdown);
+  };
   tick();
   countdown = setInterval(tick, 100);
 }
@@ -75,12 +84,26 @@ socket.on('game:state', (state) => {
     clearTimeout(resultTimeout);
     show('playing');
     document.querySelector('#player-name').textContent = state.player.name;
-    setProgress(state.percent);
+    setProgress(state.score);
     beginCountdown(state.endsAt);
+  } else if (!screens.result || screens.result.classList.contains('hidden')) {
+    queueMicrotask(() => {
+      if (!screens.result?.classList.contains('hidden')) return;
+      if (!screens.playing?.classList.contains('hidden')) {
+        clearInterval(countdown);
+        show('idle');
+      }
+    });
   }
 });
-socket.on('game:started', (state) => { show('playing'); document.querySelector('#player-name').textContent = state.player.name; setProgress(0); beginCountdown(state.endsAt); });
-socket.on('game:progress', ({ percent }) => setProgress(percent));
+socket.on('game:started', (state) => {
+  clearTimeout(resultTimeout);
+  show('playing');
+  document.querySelector('#player-name').textContent = state.player.name;
+  setProgress(0);
+  beginCountdown(state.endsAt);
+});
+socket.on('game:progress', ({ score }) => setProgress(score));
 socket.on('ranking:update', setRanking);
 socket.on('game:ended', ({ percent, prize, player }) => {
   clearInterval(countdown);

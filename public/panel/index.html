@@ -2,20 +2,14 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Desafio da Energia</title>
-    <link rel="stylesheet" href="/screen/style.css" />
+    <meta name="viewport" content="width=256, height=512, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Desafio da Energia - Painel LED</title>
+    <link rel="stylesheet" href="/panel/style.css" />
   </head>
   <body>
-    <main class="charger-stage" aria-label="Desafio da Energia">
+    <main class="panel-stage" aria-label="Desafio da Energia - Painel LED">
       <div class="charger-canvas">
         <img class="charger-art" src="/assets/ev-charger.png" alt="Carregador de veículo elétrico" />
-        <aside class="ranking-panel" aria-label="Ranking dos cinco melhores jogadores">
-          <p class="ranking-title">TOP 5</p>
-          <ol id="ranking-list" class="ranking-list">
-            <li class="ranking-empty">AGUARDANDO JOGADORES</li>
-          </ol>
-        </aside>
         <section class="device-display" aria-live="polite">
           <div id="idle" class="display-state">
             <img class="qr-code" src="/api/qrcode" alt="QR Code para participar" />
@@ -47,7 +41,29 @@
           </div>
         </section>
       </div>
+      <aside class="ranking-panel" aria-label="Ranking dos cinco melhores jogadores">
+        <p class="ranking-title">TOP 5</p>
+        <ol id="ranking-list" class="ranking-list">
+          <li class="ranking-empty">AGUARDANDO JOGADORES</li>
+        </ol>
+      </aside>
     </main>
+    <script>
+      function fitPanel() {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('scale') === 'none' || params.get('fixed') === 'true') {
+          document.documentElement.style.setProperty('--panel-scale', '1');
+          return;
+        }
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        if (!w || !h) return;
+        const scale = Math.min(w / 256, h / 512);
+        document.documentElement.style.setProperty('--panel-scale', String(scale));
+      }
+      window.addEventListener('resize', fitPanel);
+      fitPanel();
+    </script>
     <script src="/socket.io/socket.io.js"></script>
     <script type="module" src="/screen/app.js"></script>
   </body>
