@@ -1,0 +1,393 @@
+:root {
+  color-scheme: dark;
+  --panel-scale: 1;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: #071422;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+.panel-stage {
+  width: 256px;
+  height: 512px;
+  position: relative;
+  overflow: hidden;
+  background: #071422;
+  flex: 0 0 256px;
+  transform: scale(var(--panel-scale, 1));
+  transform-origin: center center;
+}
+
+/* ── Enquadramento do carregador em retrato ── */
+.charger-canvas {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 910px;
+  height: 512px;
+  aspect-ratio: 1672 / 941;
+  transform: translateX(-49.761%);
+  pointer-events: none;
+}
+
+.charger-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* ── Display do dispositivo (área da tela do carregador) ── */
+.device-display {
+  position: absolute;
+  left: 40.07%;
+  top: 13.28%;
+  width: 18.84%;
+  height: 34.11%;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: inset 0 0 8px rgba(0, 21, 35, 0.35);
+  color: #0f333c;
+  pointer-events: auto;
+}
+
+.display-state {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.display-state.hidden,
+.hidden {
+  display: none !important;
+}
+
+/* ── Estado Idle (QR Code) ── */
+#idle {
+  padding: 6px;
+}
+
+.qr-code {
+  width: 88px;
+  height: 88px;
+  object-fit: contain;
+  background: #ffffff;
+  border-radius: 0;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+#idle p {
+  margin: 6px 0 0;
+  font-weight: 800;
+  font-size: 10px;
+  line-height: 1.25;
+  letter-spacing: .08em;
+  color: #0f333c;
+  text-align: center;
+}
+
+/* ── Estado Jogando ── */
+#playing {
+  justify-content: space-between;
+  padding: 7px 8px;
+}
+
+.game-heading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+}
+
+.display-label {
+  color: #13708a;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.display-timer {
+  font-size: 24px;
+  line-height: 1;
+  font-weight: 900;
+  color: #0f333c;
+  margin: 1px 0 0;
+}
+
+.timer-unit {
+  color: #718796;
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.battery-icon {
+  position: relative;
+  width: 42px;
+  height: 60px;
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 2.5px solid #13708a;
+  border-radius: 5px;
+  color: #13708a;
+  background: #08212e;
+  box-shadow: 0 0 6px rgba(19, 112, 138, 0.3);
+  margin: 4px auto 2px;
+}
+
+.battery-icon::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: 28%;
+  width: 44%;
+  height: 5px;
+  background: currentColor;
+  border-radius: 2px 2px 0 0;
+  z-index: 2;
+}
+
+.battery-fill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 0%;
+  border-radius: 2.5px;
+  background: #e53e3e;
+  transition: height .15s ease-out, background-color .4s ease;
+}
+
+.display-percent {
+  position: relative;
+  z-index: 1;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, .8);
+  margin: auto;
+}
+
+.overage {
+  color: #147fc7;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: .04em;
+  line-height: 1;
+  margin: 1px 0 0;
+}
+
+.display-player {
+  width: 100%;
+  color: #173754;
+  font-size: 9px;
+  font-weight: 700;
+  margin: 0;
+  overflow: hidden;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Estado Resultado ── */
+#result {
+  justify-content: space-between;
+  padding: 7px 8px;
+}
+
+.result-player {
+  margin: 0 !important;
+  color: #173754 !important;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.result-label {
+  color: #718796;
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.result-battery {
+  position: relative;
+  width: 38px;
+  height: 50px;
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 2.5px solid #13708a;
+  border-radius: 5px;
+  color: #13708a;
+  background: #08212e;
+  box-shadow: 0 0 6px rgba(19, 112, 138, 0.3);
+  margin: 3px auto 1px;
+}
+
+.result-battery::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: 28%;
+  width: 44%;
+  height: 5px;
+  background: currentColor;
+  border-radius: 2px 2px 0 0;
+  z-index: 2;
+}
+
+.result-percent {
+  color: #fff;
+  font-size: 12px;
+  line-height: 1;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, .8);
+  font-weight: 900;
+  position: relative;
+  z-index: 1;
+  margin: auto;
+}
+
+.result-prize {
+  color: #147fc7;
+  font-weight: 800;
+  font-size: 10px !important;
+  margin: 1px 0 !important;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.result-instruction {
+  color: #5a7587;
+  font-size: 7px !important;
+  font-weight: 700;
+  line-height: 1.25;
+  margin: 0 !important;
+  text-transform: uppercase;
+}
+
+/* ── Painel de Ranking TOP 5 ── */
+.ranking-panel {
+  position: absolute;
+  top: 304px;
+  left: 10px;
+  right: 10px;
+  bottom: 8px;
+  padding: 7px 9px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 8px;
+  background: rgba(8, 43, 61, 0.4);
+  box-shadow: 0 4px 14px rgba(0, 21, 35, 0.55);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 10;
+}
+
+.ranking-title {
+  margin: 0 0 5px;
+  color: #c0f4fa;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: .16em;
+  text-align: center;
+}
+
+.ranking-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 3px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  flex: 1;
+}
+
+.ranking-item {
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 5px;
+  min-height: 24px;
+  padding: 2px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 11px;
+}
+
+.ranking-item:last-child {
+  border-bottom: 0;
+}
+
+.ranking-position {
+  color: #8cefff;
+  font-weight: 800;
+  text-align: center;
+  font-size: 11px;
+}
+
+.ranking-name {
+  overflow: hidden;
+  color: #f4fbff;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.ranking-item strong {
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.ranking-empty {
+  color: #b5ced8;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-align: center;
+  margin: auto;
+  padding: 20px 0;
+}

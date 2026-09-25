@@ -7,3 +7,4 @@ data.db
 .env
 identifier.sqlite
 .idea
+.agents
